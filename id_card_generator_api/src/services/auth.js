@@ -1,28 +1,40 @@
-import { User } from '../models'
+import {compareSync, hash} from 'bcryptjs';
 
-export const userAuthService = async (payload) => {
-    const data = await User.create(payload)
-    return data
-  }
+import {User} from '../models';
+import {generateKey} from '../utils/token';
+import {SALT} from '../settings';
 
-export const loginService = async (req, res, next) => {
-    try {
-      const user = await User.findOne({ username, password })
-      if (!user) {
-        res.status(401).json({
-          message: "Login not successful",
-          error: "User not found",
-        })
-      } else {
-        res.status(200).json({
-          message: "Login successful",
-          user,
-        })
-      }
-    } catch (error) {
-      res.status(400).json({
-        message: "An error occurred",
-        error: error.message,
-      })
-    }
+export const registerUserService = async (payload) => {
+  if (payload.password !== payload.confirmPassword) return null;
+  payload.password = await hash(payload.password, SALT);
+  delete payload.confirmPassword;
+  const newUser = new User(payload);
+  return newUser.save();
+};
+
+export const loginUserService = async (payload) => {
+  const user = await User.findOne({email: payload.email, isActive: true});
+  if (!user) return null;
+  if (!compareSync(payload.password, user.password)) return null;
+  if (!user.token) {
+    user.token = {key: generateKey()};
+    user.lastLogin = user.token.created;
+    await user.save();
   }
+  return {token: user.token.key};
+};
+
+export const retrieveUserService = async (user) => {
+  return {
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    dateJoined: user.dateJoined,
+  };
+};
+
+export const logoutUserService = async (user) => {
+  user.set('token', undefined, {strict: false});
+  await user.save();
+  return {};
+};

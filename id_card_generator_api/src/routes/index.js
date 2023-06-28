@@ -1,7 +1,7 @@
-import api from './api'
+import api from './api';
 
 const urlpatterns = new Map([
-  ['/api', api]
-])
+  ['/api', api],
+]);
 
-export default urlpatterns
+export default urlpatterns;

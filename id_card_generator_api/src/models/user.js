@@ -1,23 +1,21 @@
-const {Schema, model} = require("mongoose")
+import {Schema, model} from 'mongoose';
+
+const tokenSchema = new Schema({
+  key: {type: String, require: true, unique: true},
+}, {timestamps: {createdAt: 'created'}});
 
 const userSchema = new Schema({
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-    minlength: 6,
-    required: true,
-  },
-  role: {
-    type: String,
-    default: "Basic",
-    required: true,
-  },
-},{
-    timestamps: true
-})
-const User = model('user', userSchema)
-export default User
+  email: {type: String, require: true, unique: true},
+  firstName: {type: String, require: true},
+  lastName: {type: String, require: true},
+  password: {type: String, require: true},
+  isAdmin: {type: Boolean, require: false, default: false},
+  isActive: {type: Boolean, require: true, default: true},
+  dateJoined: {type: Date, require: true, default: Date.now},
+  lastLogin: {type: Date, require: false},
+  token: {type: tokenSchema, require: false},
+});
+
+const User = model('User', userSchema);
+
+export default User;
