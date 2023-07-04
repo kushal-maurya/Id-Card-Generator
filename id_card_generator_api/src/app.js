@@ -11,7 +11,7 @@ yargs.strict().command(
           .positional('host', {
             type: 'string',
             describe: 'Host',
-            default: '127.0.0.1',
+            default: '::',
           });
     },
     async (args) => {
