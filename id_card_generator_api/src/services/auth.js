@@ -18,7 +18,7 @@ export const loginUserService = async (payload) => {
   if (!compareSync(payload.password, user.password)) return null;
   if (!user.token) {
     user.token = {key: generateKey()};
-    user.lastLogin = user.token.created;
+    user.lastLogin = new Date();
     await user.save();
   }
   return {token: user.token.key};
