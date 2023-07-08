@@ -1,3 +1,4 @@
-import {bootstrap} from './bootstrap';
+import bootstrap from './bootstrap';
+import createsuperuser from './createsuperuser';
 
-export {bootstrap};
+export {bootstrap, createsuperuser};

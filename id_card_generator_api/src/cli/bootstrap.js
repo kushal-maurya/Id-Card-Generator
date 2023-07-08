@@ -34,7 +34,7 @@ export function getRequestListener() {
  * @param {String} host, Accepts a host
  * @return {Promise<void>} Returns a promise.
  */
-export async function bootstrap(port, host) {
+export default async function bootstrap(port, host) {
   const requestListener = getRequestListener();
 
   const options = {};
