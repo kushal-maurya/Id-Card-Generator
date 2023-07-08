@@ -4,22 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --fix src/**/*.js",
     "build": "babel src --out-dir dist",
-    "start:dev": "nodemon --exec babel-node src/app.js runserver",
-    "start": "node dist/app.js runserver",
+    "createsuperuser": "node dist/app.js createsuperuser",
+    "createsuperuser:dev": "babel-node src/app.js createsuperuser",
+    "lint": "eslint --fix src/**/*.js",
+    "start:dev": "nodemon --exec babel-node src/app.js bootstrap",
+    "start": "node dist/app.js bootstrap",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  },
+  "author": "Kushal Maurya <kushal.4428@gmail.com>",
+  "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "@babel/cli": "^7.22.5",
     "@babel/core": "^7.22.5",
     "@babel/node": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
+    "babel-jest": "^29.6.1",
     "eslint": "^8.43.0",
     "eslint-config-google": "^0.14.0",
-    "nodemon": "^2.0.22"
+    "jest": "^29.6.1",
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
