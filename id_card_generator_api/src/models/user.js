@@ -1,3 +1,4 @@
+import {compare, getSalt, hash} from 'bcryptjs';
 import {Schema, model} from 'mongoose';
 
 const tokenSchema = new Schema({
@@ -15,6 +16,27 @@ const userSchema = new Schema({
   lastLogin: {type: Date, require: false},
   token: {type: tokenSchema, require: false},
 });
+
+userSchema.pre('save', async function(next) {
+  // eslint-disable-next-line no-invalid-this
+  if (!this.isModified(this.password)) return next();
+  try {
+    const salt = await getSalt(12);
+    // eslint-disable-next-line no-invalid-this
+    const hashedPassword = await hash(this.password, salt);
+    // eslint-disable-next-line no-invalid-this
+    this.password = hashedPassword;
+    return next();
+  } catch (e) {
+    return next(e);
+  }
+});
+
+userSchema.methods.validatePassowrd = async function(password) {
+  // eslint-disable-next-line no-invalid-this
+  const success = await compare(password, this.password);
+  return success;
+};
 
 const User = model('User', userSchema);
 
