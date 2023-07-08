@@ -4,7 +4,7 @@ ID Card Generator
 
 ## How to start the application?
 
-- Run this command to start the Express, React and Nginx Servers
+- Run this command to start the Express, React and NGINX Servers
   ```bash
   docker-compose up -d
   ```
