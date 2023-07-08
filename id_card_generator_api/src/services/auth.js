@@ -1,12 +1,8 @@
-import {compareSync, hash} from 'bcryptjs';
-
 import {User} from '../models';
 import {generateKey} from '../utils/token';
-import {SALT} from '../settings';
 
 export const registerUserService = async (payload) => {
   if (payload.password !== payload.confirmPassword) return null;
-  payload.password = await hash(payload.password, SALT);
   delete payload.confirmPassword;
   const newUser = new User(payload);
   return newUser.save();
@@ -15,7 +11,8 @@ export const registerUserService = async (payload) => {
 export const loginUserService = async (payload) => {
   const user = await User.findOne({email: payload.email, isActive: true});
   if (!user) return null;
-  if (!compareSync(payload.password, user.password)) return null;
+  const match = await user.validatePassword(payload.password);
+  if (!match) return null;
   if (!user.token) {
     user.token = {key: generateKey()};
     user.lastLogin = new Date();
