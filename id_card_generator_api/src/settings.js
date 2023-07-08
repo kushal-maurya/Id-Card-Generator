@@ -6,5 +6,3 @@ dotenv.config();
 export const BASE_DIR = path.dirname(path.dirname(__filename));
 
 export const MONGODB_URI = process.env.CONNECTION_STRING;
-
-export const SALT = 12;
