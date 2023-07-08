@@ -3,8 +3,8 @@ import {
   logoutUserService,
   registerUserService,
   retrieveUserService,
-} from '../../services';
-import {loginSchema, userCreateSchema} from '../../validators';
+} from '../services';
+import {loginSchema, userCreateSchema} from '../validators';
 
 export const register = async (request, response) => {
   try {
