@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    container_name: ID-Card-Generator-MongoDB
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./datadb:/data/db
+  api:
+    build: .
+    command: >
+      bash -c "
+        cd id_card_generator_webui 
+        && npm install @esbuild/linux-x64 --location=project 
+        && npm run build 
+        && cd ../id_card_generator_api 
+        && npm run build 
+        && npm start
+      "
+    container_name: ID-Card-Generator-API
+    depends_on:
+      - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    image: id-card-generator:api
+    restart: always
+    volumes:
+      - /id-card-generator/id_card_generator_api/node_modules
+      - /id-card-generator/id_card_generator_webui/node_modules
+      - .:/id-card-generator
+  nginx:
+    container_name: ID-Card-Generator-NGINX
+    depends_on:
+      - api
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certs:/etc/ssl/certs
+      - ./id_card_generator_webui/dist:/var/www/html
