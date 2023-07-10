@@ -10,7 +10,7 @@
     "lint": "eslint --fix src/**/*.js",
     "start:dev": "nodemon --exec babel-node src/app.js bootstrap",
     "start": "node dist/app.js bootstrap",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "jest": {
     "transform": {
